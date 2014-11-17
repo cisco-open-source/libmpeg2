@@ -1,18 +1,12 @@
 Name:           libmpeg2
 Version:        0.5.1
-Release:        11%{?dist}
+Release:        1
 Summary:        MPEG-2 decoder libraries
 
 Group:          System Environment/Libraries
 License:        GPLv2+
 URL:            http://libmpeg2.sourceforge.net/
-Source0:        http://libmpeg2.sourceforge.net/files/libmpeg2-%{version}.tar.gz
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-
-BuildRequires:  SDL-devel
-BuildRequires:  libXt-devel
-BuildRequires:  libXv-devel
-
+Source0:        libmpeg2-%{version}.tar.gz
 
 %description
 libmpeg2 is a free library for decoding mpeg-2 and mpeg-1 video
@@ -32,9 +26,6 @@ Summary:        Development files for %{name}
 Group:          Development/Libraries
 Requires:       %{name} = %{version}-%{release}
 Requires:       pkgconfig
-# Introducted in F-10 Can be dropped in F-12
-Provides:       mpeg2dec-devel = %{version}-%{release}
-Obsoletes:      mpeg2dec-devel < %{version}
 
 %description    devel
 The %{name}-devel package contains libraries and header files for
@@ -43,14 +34,6 @@ developing applications that use %{name}.
 
 %prep
 %setup -q
-iconv -f ISO-8859-1 -t UTF-8 AUTHORS > AUTHORS.tmp
-touch -r AUTHORS AUTHORS.tmp 
-cp -p -f AUTHORS.tmp AUTHORS
-rm AUTHORS.tmp
-
-#Disable ppc altivec case
-sed -i -e 's/ppc-/noppc64-/' configure.ac configure
-sed -i -e 's/powerpc-/nopowerpc64-/' configure.ac configure
 
 %build
 %configure --disable-static \
@@ -111,42 +94,3 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/*.so
 %{_libdir}/pkgconfig/libmpeg2.pc
 %{_libdir}/pkgconfig/libmpeg2convert.pc
-
-
-%changelog
-* Sun Aug 31 2014 Sérgio Basto <sergio@serjux.com> - 0.5.1-11
-- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
-
-* Sun Mar 03 2013 Nicolas Chauvet <kwizart@gmail.com> - 0.5.1-10
-- Mass rebuilt for Fedora 19 Features
-
-* Wed Jan 25 2012 Nicolas Chauvet <kwizart@gmail.com> - 0.5.1-9
-- Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
-
-* Sat Oct 17 2009 kwizart < kwizart at gmail.com > - 0.5.1-8
-- Rebuild for F-12
-
-* Wed Apr  8 2009 kwizart < kwizart at gmail.com > - 0.5.1-7
-- New attempt
-
-* Sun Mar 29 2009 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 0.5.1-6
-- rebuild for new F11 features
-
-* Fri Mar 27 2009 kwizart < kwizart at gmail.com > - 0.5.1-5
-- Rebuild
-- Fix target_arch conditionals
-- Provides internal definitions mpeg2_internal.h
-- Disable ppc altivec optim (TODO improve asm optim later)
- 
-* Fri Oct  4 2008 kwizart < kwizart at gmail.com > - 0.5.1-3
-- Fix CFLAGS on x86 producing selinux denials.
-
-* Wed Jul 30 2008 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info - 0.5.1-2
-- rebuild for buildsys cflags issue
-
-* Fri Jul 18 2008 kwizart < kwizart at gmail.com > - 0.5.1-1
-- Update to 0.5.1
-
-* Tue Jul 15 2008 kwizart < kwizart at gmail.com > - 0.5.0-1
-- Initial package (based on mpeg2dec)
-
